@@ -1,27 +1,23 @@
 fn dork(arg: &str, inurl: bool, intext: bool, site: bool, intitle: bool) -> String {
-    let mut parts = Vec::new();
 
-    if inurl {
-        parts.push(format!("inurl:{}", arg));
-    }
-    if intext {
-        parts.push(format!("intext:{}", arg));
-    }
-    if site {
-        parts.push(format!("site:{}", arg.trim_start_matches("https://").trim_start_matches("http://")));
-    }
-    if intitle {
-        parts.push(format!("intitle:{}", arg));
-    }
+    // ========< Preparation for Url >========
+    let mut parts = String::new();
 
-    let search = parts.join(" ");
-    let safe_search = urlencoding::encode(search.as_str()).into_owned();
+    if inurl {parts.push_str(format!("inurl:{} ", arg).as_str());}
+    if intext {parts.push_str(format!("intext: {} ", arg).as_str());}
+    if site {parts.push_str(format!("site:{} ", arg).as_str());}
+    if intitle {parts.push_str(format!("intitle:{} ", arg).as_str().trim_start_matches("http://").trim_start_matches("https://"));}
 
-    let link = format!("https://google.com/search?q={}", safe_search);
-    link
+    // ========< Url generation >========
+    let search = parts.as_str();
+    let safe_search = urlencoding::encode(search).to_string();
+    let url = format!("https://google.com/search?q={}", safe_search);
+
+    url
 }
 
+
+
 fn main() {
-    println!("{}", dork("python.org", false, true, true, false));
-    println!("{}", dork("login", true, false, false, true));
+    println!("{}", dork("python.org", true, true,true,true));
 }
