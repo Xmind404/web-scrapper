@@ -13,7 +13,10 @@ fn dork(arg: &str, inurl: bool, intext: bool, site: bool, intitle: bool) -> Stri
     let safe_search = urlencoding::encode(search).to_string();
     let url = format!("https://google.com/search?q={}", safe_search);
 
-    url
+    // ========< Downloading site as single line >========
+    reqwest::blocking::get(&url)
+        .and_then(|res| res.text())
+        .unwrap_or_else(|_| "Network error".to_string())
 }
 
 
